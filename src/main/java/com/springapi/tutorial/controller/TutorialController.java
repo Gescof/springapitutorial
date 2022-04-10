@@ -1,6 +1,7 @@
 package com.springapi.tutorial.controller;
 
 import com.springapi.tutorial.model.Tutorial;
+import com.springapi.tutorial.model.TutorialDTO;
 import com.springapi.tutorial.service.impl.TutorialServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,9 +43,9 @@ public class TutorialController {
     }
 
     @PostMapping("/tutorials")
-    public ResponseEntity<Tutorial> createTutorial(@RequestBody final Tutorial tutorial) {
+    public ResponseEntity<Tutorial> createTutorial(@RequestBody final TutorialDTO tutorialDTO) {
         try {
-            Tutorial tutorialLocal = tutorialServiceImpl.add(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), false));
+            Tutorial tutorialLocal = tutorialServiceImpl.add(new Tutorial(tutorialDTO.getTitle(), tutorialDTO.getDescription(), false));
             return new ResponseEntity<>(tutorialLocal, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -52,13 +53,13 @@ public class TutorialController {
     }
 
     @PutMapping("/tutorials/{id}")
-    public ResponseEntity<Tutorial> updateTutorial(@PathVariable("id") final long id, @RequestBody final Tutorial tutorial) {
+    public ResponseEntity<Tutorial> updateTutorial(@PathVariable("id") final long id, @RequestBody final TutorialDTO tutorialDTO) {
         Optional<Tutorial> tutorialData = tutorialServiceImpl.get(id);
         if (tutorialData.isPresent()) {
             Tutorial tutorialLocal = tutorialData.get();
-            tutorialLocal.setTitle(tutorial.getTitle());
-            tutorialLocal.setDescription(tutorial.getDescription());
-            tutorialLocal.setPublished(tutorial.isPublished());
+            tutorialLocal.setTitle(tutorialDTO.getTitle());
+            tutorialLocal.setDescription(tutorialDTO.getDescription());
+            tutorialLocal.setPublished(tutorialDTO.isPublished());
             return new ResponseEntity<>(tutorialServiceImpl.add(tutorialLocal), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

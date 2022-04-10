@@ -2,6 +2,7 @@ package com.springapi.tutorial.controller;
 
 import com.springapi.tutorial.exception.TutorialDeletionException;
 import com.springapi.tutorial.model.Tutorial;
+import com.springapi.tutorial.model.TutorialDTO;
 import com.springapi.tutorial.service.impl.TutorialServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,34 +70,36 @@ class TutorialControllerTest {
 
     @Test
     void createsTutorialAndResultIsCreated201() {
-        Tutorial tutorial = new Tutorial("tutorialTest1", "Tutorial description test 1", false);
+        TutorialDTO tutorialDTO = new TutorialDTO("tutorialTest1", "Tutorial description test 1", false);
+        Tutorial tutorial = new Tutorial(tutorialDTO.getTitle(), tutorialDTO.getDescription(), tutorialDTO.isPublished());
         when(mockedTutorialServiceImpl.add(any())).thenReturn(tutorial);
-        assertEquals(new ResponseEntity<>(tutorial, HttpStatus.CREATED), tutorialController.createTutorial(tutorial));
+        assertEquals(new ResponseEntity<>(tutorial, HttpStatus.CREATED), tutorialController.createTutorial(tutorialDTO));
     }
 
     @Test
     void createsTutorialAndResultCatchesExceptionWithError500() {
-        Tutorial tutorial = new Tutorial("tutorialTest1", "Tutorial description test 1", false);
+        TutorialDTO tutorialDTO = new TutorialDTO("tutorialTest1", "Tutorial description test 1", false);
         doThrow(new IllegalStateException()).when(mockedTutorialServiceImpl).add(any());
-        assertEquals(new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR), tutorialController.createTutorial(tutorial));
+        assertEquals(new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR), tutorialController.createTutorial(tutorialDTO));
     }
 
     @Test
     void updatesTutorialAndResultIsOk200() {
         long tutorialId = 1L;
         Tutorial tutorial = new Tutorial("tutorialTest1", "Tutorial description test 1", false);
-        Tutorial tutorialUpdated = new Tutorial("tutorialTestUpdated1", "Tutorial description test updated 1", false);
+        TutorialDTO tutorialDTOUpdated = new TutorialDTO("tutorialTestUpdated1", "Tutorial description test updated 1", false);
+        Tutorial tutorialUpdated = new Tutorial(tutorialDTOUpdated.getTitle(), tutorialDTOUpdated.getDescription(), tutorialDTOUpdated.isPublished());
         when(mockedTutorialServiceImpl.get(tutorialId)).thenReturn(Optional.of(tutorial));
         when(mockedTutorialServiceImpl.add(any())).thenReturn(tutorialUpdated);
-        assertEquals(new ResponseEntity<>(tutorialUpdated, HttpStatus.OK), tutorialController.updateTutorial(tutorialId, tutorialUpdated));
+        assertEquals(new ResponseEntity<>(tutorialUpdated, HttpStatus.OK), tutorialController.updateTutorial(tutorialId, tutorialDTOUpdated));
     }
 
     @Test
     void updatesTutorialAndResultIsNotFound404() {
         long tutorialId = 1L;
-        Tutorial tutorial = new Tutorial("tutorialTest1", "Tutorial description test 1", false);
+        TutorialDTO tutorialDTO = new TutorialDTO("tutorialTest1", "Tutorial description test 1", false);
         when(mockedTutorialServiceImpl.get(tutorialId)).thenReturn(Optional.empty());
-        assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), tutorialController.updateTutorial(tutorialId, tutorial));
+        assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), tutorialController.updateTutorial(tutorialId, tutorialDTO));
     }
 
     @Test
