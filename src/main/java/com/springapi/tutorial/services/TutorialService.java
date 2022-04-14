@@ -2,22 +2,66 @@ package com.springapi.tutorial.services;
 
 import com.springapi.tutorial.exceptions.TutorialDeletionException;
 import com.springapi.tutorial.model.entities.Tutorial;
+import com.springapi.tutorial.repositories.TutorialRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface TutorialService {
-    Tutorial add(Tutorial tutorial);
+@Service
+public class TutorialService {
 
-    List<Tutorial> getAll();
+    private final TutorialRepository tutorialRepository;
 
-    Optional<Tutorial> get(Long id);
+    @Autowired
+    TutorialService(TutorialRepository tutorialRepository) {
+        this.tutorialRepository = tutorialRepository;
+    }
 
-    List<Tutorial> getPublished(boolean published);
+    @Transactional
+    public Tutorial add(final Tutorial tutorial) {
+        return tutorialRepository.save(tutorial);
+    }
 
-    List<Tutorial> getByTitleContaining(String title);
+    @Transactional
+    public List<Tutorial> getAll() {
+        return tutorialRepository.findAll();
+    }
 
-    Boolean delete(Long id) throws TutorialDeletionException;
+    @Transactional
+    public Optional<Tutorial> get(final Long id) {
+        return tutorialRepository.findById(id);
+    }
 
-    Boolean deleteAll() throws TutorialDeletionException;
+    @Transactional
+    public List<Tutorial> getPublished(final boolean published) {
+        return tutorialRepository.findByPublished(published);
+    }
+
+    @Transactional
+    public List<Tutorial> getByTitleContaining(final String title) {
+        return tutorialRepository.findByTitleContaining(title);
+    }
+
+    @Transactional
+    public Boolean delete(final Long id) throws TutorialDeletionException {
+        try {
+            tutorialRepository.deleteById(id);
+        } catch (final Exception e) {
+            throw new TutorialDeletionException(e.getMessage(), e.getCause());
+        }
+        return true;
+    }
+
+    @Transactional
+    public Boolean deleteAll() throws TutorialDeletionException {
+        try {
+            tutorialRepository.deleteAll();
+        } catch (final Exception e) {
+            throw new TutorialDeletionException(e.getMessage(), e.getCause());
+        }
+        return true;
+    }
 }
