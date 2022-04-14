@@ -20,6 +20,9 @@
 		<sonar.coverage.jacoco.xmlReportPaths>
 			../app-it/target/site/jacoco-aggregate/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.coverage.exclusions>
+			**/entities/*
+		</sonar.coverage.exclusions>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -71,6 +74,11 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.7</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/entities/*</exclude>
+                    </excludes>
+                </configuration>
 				<executions>
 					<execution>
 						<id>prepare-agent</id>

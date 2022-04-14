@@ -44,7 +44,9 @@ public class TutorialController {
     @GetMapping("/tutorials/{id}")
     public ResponseEntity<Tutorial> getTutorialById(@PathVariable("id") final long id) {
         Optional<Tutorial> tutorialData = tutorialService.get(id);
-        return tutorialData.map(tutorial -> new ResponseEntity<>(tutorial, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return tutorialData
+                .map(tutorial -> new ResponseEntity<>(tutorial, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/tutorials/published")
