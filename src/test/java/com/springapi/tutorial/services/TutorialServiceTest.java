@@ -3,23 +3,29 @@ package com.springapi.tutorial.services;
 import com.springapi.tutorial.exceptions.TutorialDeletionException;
 import com.springapi.tutorial.model.entities.Tutorial;
 import com.springapi.tutorial.repositories.TutorialRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
 class TutorialServiceTest {
-    @Autowired
+
+    @InjectMocks
     TutorialService tutorialService;
 
-    @MockBean
+    @Mock
     TutorialRepository mockedTutorialRepository;
+
+    @BeforeEach
+    void init() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     void addsATutorialAndResultIsNotNull() {

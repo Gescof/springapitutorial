@@ -1,13 +1,14 @@
 package com.springapi.tutorial.controllers;
 
 import com.springapi.tutorial.exceptions.TutorialDeletionException;
-import com.springapi.tutorial.model.entities.Tutorial;
 import com.springapi.tutorial.model.dtos.TutorialDto;
+import com.springapi.tutorial.model.entities.Tutorial;
 import com.springapi.tutorial.services.TutorialService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -19,13 +20,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 class TutorialControllerTest {
-    @Autowired
+
+    @InjectMocks
     TutorialController tutorialController;
 
-    @MockBean
+    @Mock
     TutorialService mockedTutorialService;
+
+    @BeforeEach
+    void init() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     void getsAllTutorialsAndResultIsOk200() {
@@ -146,4 +152,5 @@ class TutorialControllerTest {
         doThrow(new IllegalStateException()).when(mockedTutorialService).getPublished(true);
         assertEquals(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR), tutorialController.findByPublished());
     }
+
 }
