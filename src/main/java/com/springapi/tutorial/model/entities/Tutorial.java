@@ -1,4 +1,4 @@
-package com.springapi.tutorial.model;
+package com.springapi.tutorial.model.entities;
 
 import javax.persistence.*;
 import java.util.Objects;

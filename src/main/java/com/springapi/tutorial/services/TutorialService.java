@@ -1,7 +1,7 @@
-package com.springapi.tutorial.service;
+package com.springapi.tutorial.services;
 
-import com.springapi.tutorial.exception.TutorialDeletionException;
-import com.springapi.tutorial.model.Tutorial;
+import com.springapi.tutorial.exceptions.TutorialDeletionException;
+import com.springapi.tutorial.model.entities.Tutorial;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,8 +1,8 @@
-package com.springapi.tutorial.controller;
+package com.springapi.tutorial.controllers;
 
-import com.springapi.tutorial.model.Tutorial;
-import com.springapi.tutorial.model.TutorialDTO;
-import com.springapi.tutorial.service.impl.TutorialServiceImpl;
+import com.springapi.tutorial.model.entities.Tutorial;
+import com.springapi.tutorial.model.dtos.TutorialDto;
+import com.springapi.tutorial.services.impl.TutorialServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +14,15 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class TutorialController {
+
+    private final TutorialServiceImpl tutorialServiceImpl;
+
     @Autowired
-    TutorialServiceImpl tutorialServiceImpl;
+    public TutorialController(TutorialServiceImpl tutorialServiceImpl) {
+        this.tutorialServiceImpl = tutorialServiceImpl;
+    }
 
     @GetMapping("/tutorials")
     public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) final String title) {
@@ -43,7 +48,7 @@ public class TutorialController {
     }
 
     @PostMapping("/tutorials")
-    public ResponseEntity<Tutorial> createTutorial(@RequestBody final TutorialDTO tutorialDTO) {
+    public ResponseEntity<Tutorial> createTutorial(@RequestBody final TutorialDto tutorialDTO) {
         try {
             Tutorial tutorialLocal = tutorialServiceImpl.add(new Tutorial(tutorialDTO.getTitle(), tutorialDTO.getDescription(), false));
             return new ResponseEntity<>(tutorialLocal, HttpStatus.CREATED);
@@ -53,7 +58,7 @@ public class TutorialController {
     }
 
     @PutMapping("/tutorials/{id}")
-    public ResponseEntity<Tutorial> updateTutorial(@PathVariable("id") final long id, @RequestBody final TutorialDTO tutorialDTO) {
+    public ResponseEntity<Tutorial> updateTutorial(@PathVariable("id") final long id, @RequestBody final TutorialDto tutorialDTO) {
         Optional<Tutorial> tutorialData = tutorialServiceImpl.get(id);
         if (tutorialData.isPresent()) {
             Tutorial tutorialLocal = tutorialData.get();

@@ -1,8 +1,8 @@
-package com.springapi.tutorial.service.impl;
+package com.springapi.tutorial.services.impl;
 
-import com.springapi.tutorial.exception.TutorialDeletionException;
-import com.springapi.tutorial.model.Tutorial;
-import com.springapi.tutorial.repository.TutorialRepository;
+import com.springapi.tutorial.exceptions.TutorialDeletionException;
+import com.springapi.tutorial.model.entities.Tutorial;
+import com.springapi.tutorial.repositories.TutorialRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,9 +1,9 @@
-package com.springapi.tutorial.service.impl;
+package com.springapi.tutorial.services.impl;
 
-import com.springapi.tutorial.exception.TutorialDeletionException;
-import com.springapi.tutorial.model.Tutorial;
-import com.springapi.tutorial.repository.TutorialRepository;
-import com.springapi.tutorial.service.TutorialService;
+import com.springapi.tutorial.exceptions.TutorialDeletionException;
+import com.springapi.tutorial.model.entities.Tutorial;
+import com.springapi.tutorial.repositories.TutorialRepository;
+import com.springapi.tutorial.services.TutorialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +12,13 @@ import java.util.Optional;
 
 @Service
 public class TutorialServiceImpl implements TutorialService {
+
+    private final TutorialRepository tutorialRepository;
+
     @Autowired
-    private TutorialRepository tutorialRepository;
+    TutorialServiceImpl(TutorialRepository tutorialRepository) {
+        this.tutorialRepository = tutorialRepository;
+    }
 
     @Override
     public Tutorial add(final Tutorial tutorial) {
@@ -27,7 +32,7 @@ public class TutorialServiceImpl implements TutorialService {
 
     @Override
     public Optional<Tutorial> get(final Long id) {
-        return Optional.of(tutorialRepository.getById(id));
+        return tutorialRepository.findById(id);
     }
 
     @Override
