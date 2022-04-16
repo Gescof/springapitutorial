@@ -12,7 +12,7 @@
 
 	<groupId>com.springapi</groupId>
 	<artifactId>tutorial</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>tutorial</name>
 	<description>Spring API REST project for Spring Boot</description>
 
@@ -24,7 +24,7 @@
 			../app-it/target/site/jacoco-aggregate/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.coverage.exclusions>
-			**/entities/*
+			**/model/**/*
 		</sonar.coverage.exclusions>
 		<jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 	</properties>
@@ -66,6 +66,12 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>3.1.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -96,7 +102,7 @@
 								<format>XML</format>
 							</formats>
 							<excludes>
-								<exclude>**/entities/*</exclude>
+								<exclude>**/model/**/*</exclude>
 							</excludes>
 						</configuration>
 					</execution>
