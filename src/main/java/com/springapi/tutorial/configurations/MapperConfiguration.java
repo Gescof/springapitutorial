@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class MapperConfiguration {
+
     @Bean
     public ModelMapper modelMapper() {
         final ModelMapper modelMapper = new ModelMapper();
@@ -21,4 +22,5 @@ public class MapperConfiguration {
         });
         return modelMapper;
     }
+
 }
