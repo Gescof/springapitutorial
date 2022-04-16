@@ -17,9 +17,17 @@ public class Tutorial {
     private boolean published;
 
     public Tutorial() {
+
     }
 
     public Tutorial(String title, String description, boolean published) {
+        this.title = title;
+        this.description = description;
+        this.published = published;
+    }
+
+    public Tutorial(long id, String title, String description, boolean published) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.published = published;
@@ -33,24 +41,28 @@ public class Tutorial {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public boolean isPublished() {
         return published;
     }
 
-    public void setPublished(boolean isPublished) {
-        this.published = isPublished;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
     }
 
     @Override
@@ -67,27 +79,23 @@ public class Tutorial {
             return false;
         }
 
-        Tutorial tutorial = (Tutorial) o;
+        Tutorial that = (Tutorial) o;
 
-        if (this.id != tutorial.id) {
+        if (this.id != that.id) {
             return false;
         }
-        if (this.published != tutorial.published) {
+        if (this.published != that.published) {
             return false;
         }
-        if (!Objects.equals(this.title, tutorial.title)) {
+        if (!Objects.equals(this.title, that.title)) {
             return false;
         }
-        return Objects.equals(this.description, tutorial.description);
+        return Objects.equals(this.description, that.description);
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (this.id ^ (this.id >>> 32));
-        result = 31 * result + (this.title != null ? this.title.hashCode() : 0);
-        result = 31 * result + (this.description != null ? this.description.hashCode() : 0);
-        result = 31 * result + (this.published ? 1 : 0);
-        return result;
+        return Objects.hash(id, title, description, published);
     }
 
 }

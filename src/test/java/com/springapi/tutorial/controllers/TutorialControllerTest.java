@@ -1,23 +1,18 @@
 package com.springapi.tutorial.controllers;
 
-import com.springapi.tutorial.exceptions.TutorialDeletionException;
 import com.springapi.tutorial.model.dtos.TutorialDto;
-import com.springapi.tutorial.model.entities.Tutorial;
 import com.springapi.tutorial.services.TutorialService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 class TutorialControllerTest {
@@ -34,123 +29,153 @@ class TutorialControllerTest {
     }
 
     @Test
-    void getsAllTutorialsAndResultIsOk200() {
-        List<Tutorial> tutorialList = List.of(new Tutorial("tutorialTest1", "Tutorial description test 1", false));
-        when(mockedTutorialService.getAll()).thenReturn(tutorialList);
-        assertEquals(new ResponseEntity<>(tutorialList, HttpStatus.OK), tutorialController.getAllTutorials(null));
+    void shouldGetAllTutorialsAndResultIsOk() {
+        // Init
+        List<TutorialDto> returnedTutorials = List.of(
+                new TutorialDto(1L, "tutorialTest1", "Tutorial description test 1", false),
+                new TutorialDto(2L, "tutorialTest2", "Tutorial description test 2", true),
+                new TutorialDto(3L, "tutorialTest3", "Tutorial description test 3", false)
+        );
+        ResponseEntity<List<TutorialDto>> expectedResponse = ResponseEntity.ok(returnedTutorials);
+
+        // When
+        when(mockedTutorialService.findAll()).thenReturn(returnedTutorials);
+
+        // Test method
+        ResponseEntity<List<TutorialDto>> actualResponse = tutorialController.getAllTutorials(null);
+
+        // Assert
+        assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
-    void getsAllTutorialsWithTitleParamAndResultIsOk200() {
-        List<Tutorial> tutorialList = List.of(new Tutorial("tutorialTest1", "Tutorial description test 1", false));
+    void shouldGetAllTutorialsWithTitleParamAndResultIsOk() {
+        // Init
         String titleContaining = "tutorialTest1";
-        when(mockedTutorialService.getByTitleContaining(titleContaining)).thenReturn(tutorialList);
-        assertEquals(new ResponseEntity<>(tutorialList, HttpStatus.OK), tutorialController.getAllTutorials(titleContaining));
+        List<TutorialDto> returnedTutorials = List.of(
+                new TutorialDto(1L, "tutorialTest1", "Tutorial description test 1", false)
+        );
+        ResponseEntity<List<TutorialDto>> expectedResponse = ResponseEntity.ok(returnedTutorials);
+
+        // When
+        when(mockedTutorialService.findAllByTitleContaining(titleContaining)).thenReturn(returnedTutorials);
+
+        // Test method
+        ResponseEntity<List<TutorialDto>> actualResponse = tutorialController.getAllTutorials(titleContaining);
+
+        // Assert
+        assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
-    void getsAllTutorialsAndResultIsNoContent204() {
-        when(mockedTutorialService.getAll()).thenReturn(List.of());
-        assertEquals(new ResponseEntity<>(HttpStatus.NO_CONTENT), tutorialController.getAllTutorials(null));
+    void shouldGetPublishedTutorialsAndResultIsOk() {
+        // Init
+        List<TutorialDto> returnedTutorials = List.of(
+                new TutorialDto(2L, "tutorialTest2", "Tutorial description test 2", true)
+        );
+        ResponseEntity<List<TutorialDto>> expectedResponse = ResponseEntity.ok(returnedTutorials);
+
+        // When
+        when(mockedTutorialService.findAllPublished(true)).thenReturn(returnedTutorials);
+
+        // Test method
+        ResponseEntity<List<TutorialDto>> actualResponse = tutorialController.getPublishedTutorials();
+
+        // Assert
+        assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
-    void getsAllTutorialsAndResultCatchesExceptionWithError500() {
-        doThrow(new IllegalStateException()).when(mockedTutorialService).getAll();
-        assertEquals(new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR), tutorialController.getAllTutorials(null));
+    void shouldGetTutorialByIdAndResultIsOk() {
+        // Init
+        long id = 1L;
+        TutorialDto returnedTutorial = new TutorialDto(1L,
+                "tutorialTest1",
+                "Tutorial description test 1",
+                false
+        );
+        ResponseEntity<TutorialDto> expectedResponse = ResponseEntity.ok(returnedTutorial);
+
+        // When
+        when(mockedTutorialService.findById(id)).thenReturn(returnedTutorial);
+
+        // Test method
+        ResponseEntity<TutorialDto> actualResponse = tutorialController.getTutorialById(id);
+
+        // Assert
+        assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
-    void getsTutorialByIdAndResultIsOk200() {
-        Optional<Tutorial> tutorial = Optional.of(new Tutorial("tutorialTest1", "Tutorial description test 1", false));
-        when(mockedTutorialService.get(tutorial.get().getId())).thenReturn(tutorial);
-        assertEquals(new ResponseEntity<>(tutorial.get(), HttpStatus.OK), tutorialController.getTutorialById(tutorial.get().getId()));
+    void shouldCreateTutorialAndResultIsCreated() {
+        // Init
+        TutorialDto tutorialDto = new TutorialDto(1L,
+                "tutorialTest1",
+                "Tutorial description test 1",
+                false
+        );
+        TutorialDto createdTutorial = new TutorialDto(1L,
+                "tutorialTest1",
+                "Tutorial description test 1",
+                false
+        );
+        ResponseEntity<TutorialDto> expectedResponse = ResponseEntity.created(URI.create(
+                String.format("tutorial/%d", createdTutorial.getId())
+        )).body(createdTutorial);
+
+        // When
+        when(mockedTutorialService.add(tutorialDto)).thenReturn(createdTutorial);
+
+        // Test method
+        ResponseEntity<TutorialDto> actualResponse = tutorialController.createTutorial(tutorialDto);
+
+        // Assert
+        assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
-    void getsTutorialByIdAndResultIsNotFound404() {
-        long tutorialId = 1L;
-        when(mockedTutorialService.get(tutorialId)).thenReturn(Optional.empty());
-        assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), tutorialController.getTutorialById(tutorialId));
+    void shouldUpdateTutorialAndResultIsOk() {
+        // Init
+        long id = 1L;
+        TutorialDto tutorialDto = new TutorialDto(1L,
+                "tutorialTest1",
+                "Tutorial description test 1",
+                false
+        );
+        TutorialDto updatedTutorial = new TutorialDto(1L,
+                "tutorialTestUpdated1",
+                "Tutorial description test updated 1",
+                true
+        );
+        ResponseEntity<TutorialDto> expectedResponse = ResponseEntity.ok(updatedTutorial);
+
+        // When
+        when(mockedTutorialService.update(id, tutorialDto)).thenReturn(updatedTutorial);
+
+        // Test method
+        ResponseEntity<TutorialDto> actualResponse = tutorialController.updateTutorial(id, tutorialDto);
+
+        // Assert
+        assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
-    void createsTutorialAndResultIsCreated201() {
-        TutorialDto tutorialDTO = new TutorialDto("tutorialTest1", "Tutorial description test 1", false);
-        Tutorial tutorial = new Tutorial(tutorialDTO.getTitle(), tutorialDTO.getDescription(), tutorialDTO.isPublished());
-        when(mockedTutorialService.add(any())).thenReturn(tutorial);
-        assertEquals(new ResponseEntity<>(tutorial, HttpStatus.CREATED), tutorialController.createTutorial(tutorialDTO));
-    }
+    void shouldDeleteTutorialsByTitleContainingAndResultIsOk() {
+        // Init
+        String title = "tutorialTest1";
+        List<TutorialDto> returnedTutorials = List.of(
+                new TutorialDto(1L, "tutorialTest1", "Tutorial description test 1", false)
+        );
+        ResponseEntity<List<TutorialDto>> expectedResponse = ResponseEntity.ok(returnedTutorials);
 
-    @Test
-    void createsTutorialAndResultCatchesExceptionWithError500() {
-        TutorialDto tutorialDTO = new TutorialDto("tutorialTest1", "Tutorial description test 1", false);
-        doThrow(new IllegalStateException()).when(mockedTutorialService).add(any());
-        assertEquals(new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR), tutorialController.createTutorial(tutorialDTO));
-    }
+        // When
+        when(mockedTutorialService.deleteByTitleContaining(title)).thenReturn(returnedTutorials);
 
-    @Test
-    void updatesTutorialAndResultIsOk200() {
-        long tutorialId = 1L;
-        Tutorial tutorial = new Tutorial("tutorialTest1", "Tutorial description test 1", false);
-        TutorialDto tutorialDtoUpdated = new TutorialDto("tutorialTestUpdated1", "Tutorial description test updated 1", false);
-        Tutorial tutorialUpdated = new Tutorial(tutorialDtoUpdated.getTitle(), tutorialDtoUpdated.getDescription(), tutorialDtoUpdated.isPublished());
-        when(mockedTutorialService.get(tutorialId)).thenReturn(Optional.of(tutorial));
-        when(mockedTutorialService.add(any())).thenReturn(tutorialUpdated);
-        assertEquals(new ResponseEntity<>(tutorialUpdated, HttpStatus.OK), tutorialController.updateTutorial(tutorialId, tutorialDtoUpdated));
-    }
+        // Test method
+        ResponseEntity<List<TutorialDto>> actualResponse = tutorialController.deleteTutorialsByTitleContaining(title);
 
-    @Test
-    void updatesTutorialAndResultIsNotFound404() {
-        long tutorialId = 1L;
-        TutorialDto tutorialDTO = new TutorialDto("tutorialTest1", "Tutorial description test 1", false);
-        when(mockedTutorialService.get(tutorialId)).thenReturn(Optional.empty());
-        assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), tutorialController.updateTutorial(tutorialId, tutorialDTO));
-    }
-
-    @Test
-    void deletesTutorialAndResultIsNoContent204() throws TutorialDeletionException {
-        long tutorialId = 1L;
-        when(mockedTutorialService.delete(tutorialId)).thenReturn(true);
-        assertEquals(new ResponseEntity<>(HttpStatus.NO_CONTENT), tutorialController.deleteTutorial(tutorialId));
-    }
-
-    @Test
-    void deletesTutorialAndResultCatchesExceptionWithError500() throws TutorialDeletionException {
-        long tutorialId = 1L;
-        doThrow(new TutorialDeletionException("Tutorial Deletion Exception", new Throwable())).when(mockedTutorialService).delete(tutorialId);
-        assertEquals(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR), tutorialController.deleteTutorial(tutorialId));
-    }
-
-    @Test
-    void deletesAllTutorialsAndResultIsNoContent204() throws TutorialDeletionException {
-        when(mockedTutorialService.deleteAll()).thenReturn(true);
-        assertEquals(new ResponseEntity<>(HttpStatus.NO_CONTENT), tutorialController.deleteAllTutorials());
-    }
-
-    @Test
-    void deletesAllTutorialsAndResultCatchesExceptionWithError500() throws TutorialDeletionException {
-        doThrow(new TutorialDeletionException("Tutorial Deletion Exception", new Throwable())).when(mockedTutorialService).deleteAll();
-        assertEquals(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR), tutorialController.deleteAllTutorials());
-    }
-
-    @Test
-    void findsByPublishedAndResultIsOk200() {
-        List<Tutorial> tutorialList = List.of(new Tutorial("tutorialTest1", "Tutorial description test 1", true));
-        when(mockedTutorialService.getPublished(true)).thenReturn(tutorialList);
-        assertEquals(new ResponseEntity<>(tutorialList, HttpStatus.OK), tutorialController.findByPublished());
-    }
-
-    @Test
-    void findsByPublishedAndResultIsNoContent204() {
-        when(mockedTutorialService.getPublished(true)).thenReturn(List.of());
-        assertEquals(new ResponseEntity<>(HttpStatus.NO_CONTENT), tutorialController.findByPublished());
-    }
-
-    @Test
-    void findsByPublishedAndResultCatchesExceptionWithError500() {
-        doThrow(new IllegalStateException()).when(mockedTutorialService).getPublished(true);
-        assertEquals(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR), tutorialController.findByPublished());
+        // Assert
+        assertEquals(expectedResponse, actualResponse);
     }
 
 }
