@@ -24,7 +24,7 @@
 			../app-it/target/site/jacoco-aggregate/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.coverage.exclusions>
-			**/entities/*
+			**/model/*
 		</sonar.coverage.exclusions>
 		<jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 	</properties>
@@ -102,7 +102,7 @@
 								<format>XML</format>
 							</formats>
 							<excludes>
-								<exclude>**/entities/*</exclude>
+								<exclude>**/model/*</exclude>
 							</excludes>
 						</configuration>
 					</execution>

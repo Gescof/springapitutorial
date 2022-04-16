@@ -1,60 +1,66 @@
 package com.springapi.tutorial.model.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class TutorialDto {
-    private long id;
-    private String title;
-    private String description;
-    private boolean published;
+    @JsonProperty("id")
+    private long idDto;
+    @JsonProperty("title")
+    private String titleDto;
+    @JsonProperty("description")
+    private String descriptionDto;
+    @JsonProperty("published")
+    private boolean publishedDto;
 
     public TutorialDto() {
 
     }
 
-    public TutorialDto(String title, String description, boolean published) {
-        this.title = title;
-        this.description = description;
-        this.published = published;
+    public TutorialDto(String titleDto, String descriptionDto, boolean publishedDto) {
+        this.titleDto = titleDto;
+        this.descriptionDto = descriptionDto;
+        this.publishedDto = publishedDto;
     }
 
-    public TutorialDto(long id, String title, String description, boolean published) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.published = published;
+    public TutorialDto(long idDto, String titleDto, String descriptionDto, boolean publishedDto) {
+        this.idDto = idDto;
+        this.titleDto = titleDto;
+        this.descriptionDto = descriptionDto;
+        this.publishedDto = publishedDto;
     }
 
-    public long getId() {
-        return id;
+    public long getIdDto() {
+        return idDto;
     }
 
-    public String getTitle() {
-        return title;
+    public String getTitleDto() {
+        return titleDto;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionDto() {
+        return descriptionDto;
     }
 
-    public boolean isPublished() {
-        return published;
+    public boolean isPublishedDto() {
+        return publishedDto;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setIdDto(long idDto) {
+        this.idDto = idDto;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitleDto(String titleDto) {
+        this.titleDto = titleDto;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionDto(String descriptionDto) {
+        this.descriptionDto = descriptionDto;
     }
 
-    public void setPublished(boolean published) {
-        this.published = published;
+    public void setPublishedDto(boolean publishedDto) {
+        this.publishedDto = publishedDto;
     }
 
     @Override
@@ -68,21 +74,21 @@ public class TutorialDto {
 
         TutorialDto that = (TutorialDto) o;
 
-        if (this.id != that.id) {
+        if (this.idDto != that.idDto) {
             return false;
         }
-        if (this.published != that.published) {
+        if (this.publishedDto != that.publishedDto) {
             return false;
         }
-        if (!Objects.equals(this.title, that.title)) {
+        if (!Objects.equals(this.titleDto, that.titleDto)) {
             return false;
         }
-        return Objects.equals(this.description, that.description);
+        return Objects.equals(this.descriptionDto, that.descriptionDto);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, published);
+        return Objects.hash(idDto, titleDto, descriptionDto, publishedDto);
     }
 
 }

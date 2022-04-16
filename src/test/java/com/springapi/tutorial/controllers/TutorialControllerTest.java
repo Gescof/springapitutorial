@@ -120,7 +120,7 @@ class TutorialControllerTest {
                 false
         );
         ResponseEntity<TutorialDto> expectedResponse = ResponseEntity.created(URI.create(
-                String.format("tutorial/%d", createdTutorial.getId())
+                String.format("tutorial/%d", createdTutorial.getIdDto())
         )).body(createdTutorial);
 
         // When

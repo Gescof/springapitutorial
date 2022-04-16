@@ -33,7 +33,7 @@ public class TutorialService {
         final Tutorial createdTutorial = tutorialRepository.save(modelmapper.map(tutorialDto, Tutorial.class));
         return Optional.ofNullable(modelmapper.map(createdTutorial, TutorialDto.class))
                 .orElseThrow(() -> new TutorialCreationException(
-                        String.format("Tutorial with title: %s could not be created", tutorialDto.getTitle()))
+                        String.format("Tutorial with title: %s could not be created", tutorialDto.getTitleDto()))
                 );
     }
 
@@ -81,9 +81,9 @@ public class TutorialService {
         final Optional<Tutorial> foundTutorial = tutorialRepository.findById(id);
         return foundTutorial
                 .map(tutorial -> {
-                            tutorial.setTitle(tutorialDto.getTitle());
-                            tutorial.setDescription(tutorialDto.getDescription());
-                            tutorial.setPublished(tutorialDto.isPublished());
+                            tutorial.setTitle(tutorialDto.getTitleDto());
+                            tutorial.setDescription(tutorialDto.getDescriptionDto());
+                            tutorial.setPublished(tutorialDto.isPublishedDto());
                             final Tutorial updatedTutorial = tutorialRepository.save(tutorial);
                             return modelmapper.map(
                                     Optional.of(updatedTutorial)

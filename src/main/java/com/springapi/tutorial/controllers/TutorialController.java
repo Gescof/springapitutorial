@@ -43,7 +43,7 @@ public class TutorialController {
     @PostMapping("/tutorial")
     public ResponseEntity<TutorialDto> createTutorial(@RequestBody final TutorialDto tutorialDto) {
         final TutorialDto createdTutorial = tutorialService.add(tutorialDto);
-        return ResponseEntity.created(URI.create(String.format("tutorial/%d", createdTutorial.getId()))).body(createdTutorial);
+        return ResponseEntity.created(URI.create(String.format("tutorial/%d", createdTutorial.getIdDto()))).body(createdTutorial);
     }
 
     @PutMapping("/tutorial/{id}")
